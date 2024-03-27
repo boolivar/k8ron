@@ -1,0 +1,69 @@
+plugins {
+    id "java"
+    id "jacoco"
+    id "pmd"
+    id "checkstyle"
+    id "com.github.spotbugs"
+    id "io.freefair.lombok"
+}
+
+group = "org.bool"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestCoverageVerification {
+    dependsOn test
+    violationRules {
+        rule {
+            limit {
+                minimum = jacocoMinRatio as BigDecimal
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+jar.dependsOn check
+
+checkstyle {
+    configDirectory = file("$rootDir/gradle/config/checkstyle")
+    toolVersion = "9.3"
+}
+
+pmd {
+    consoleOutput = true
+    ruleSets = ["ruleset.xml"]
+}
+
+tasks.withType(Pmd).configureEach {
+    pmdClasspath += files("$rootDir/gradle/config/pmd")
+}
+
+spotbugs {
+    omitVisitors = ["FindReturnRef"]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation platform(project(":platform"))
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.springframework"
+        exclude group: "org.springframework.boot"
+    }
+}
