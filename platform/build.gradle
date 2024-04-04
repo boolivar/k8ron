@@ -7,9 +7,11 @@ javaPlatform {
 }
 
 dependencies {
-    api platform("org.springframework.boot:spring-boot-dependencies:3.2.3")
+    api platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    api platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.0")
     constraints {
         api "commons-io:commons-io:2.15.1"
         api "org.apache.commons:commons-collections4:4.4"
+        api "org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0"
     }
 }
