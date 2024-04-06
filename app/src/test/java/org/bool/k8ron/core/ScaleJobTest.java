@@ -64,5 +64,7 @@ class ScaleJobTest {
 
         then(deployments.withName("name"))
             .should().scale(replicas);
+        assertThat(job.getReplicas())
+            .isEqualTo(replicas);
     }
 }

@@ -18,7 +18,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(Lifecycle.PER_CLASS)
 class ScaleJobFactoryTest {
 
-    private final ScaleJobFactory jobFactory = new ScaleJobFactory("test-ns"::toString, "TestJob");
+    private static final String JOB_NAME = "TestJob";
+
+    private final ScaleJobFactory jobFactory = new ScaleJobFactory("test-ns"::toString, JOB_NAME);
 
     @Test
     void testDefaultJobName() {
@@ -30,14 +32,14 @@ class ScaleJobFactoryTest {
     void testTrigger() {
         assertThat(jobFactory.newTrigger().name("test").key("key").cron("0 0 0 ? * *").build())
             .returns(new TriggerKey("key", "test-ns/test"), Trigger::getKey)
-            .returns(new JobKey("TestJob", "test-ns/test"), Trigger::getJobKey)
+            .returns(new JobKey(JOB_NAME, "test-ns/test"), Trigger::getJobKey)
             .extracting(Trigger::getJobDataMap, InstanceOfAssertFactories.MAP)
                 .containsEntry("replicas", 0)
             ;
         assertThat(jobFactory.newTrigger()
                 .namespace("namespace").name("deployment").key("trigger").replicas(20).cron("0 0 0 ? * *").build())
             .returns(new TriggerKey("trigger", "namespace/deployment"), Trigger::getKey)
-            .returns(new JobKey("TestJob", "namespace/deployment"), Trigger::getJobKey)
+            .returns(new JobKey(JOB_NAME, "namespace/deployment"), Trigger::getJobKey)
             .extracting(Trigger::getJobDataMap, InstanceOfAssertFactories.MAP)
                 .containsEntry("replicas", 20)
             ;
@@ -51,7 +53,7 @@ class ScaleJobFactoryTest {
             .returns(ScaleJob.class, JobDetail::getJobClass)
             .extracting(JobDetail::getKey)
                 .returns("ns/name", JobKey::getGroup)
-                .returns("TestJob", JobKey::getName)
+                .returns(JOB_NAME, JobKey::getName)
             ;
     }
 
