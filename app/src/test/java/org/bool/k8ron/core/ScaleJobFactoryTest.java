@@ -11,6 +11,7 @@ import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 
+import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +38,8 @@ class ScaleJobFactoryTest {
                 .containsEntry("replicas", 0)
             ;
         assertThat(jobFactory.newTrigger()
-                .namespace("namespace").name("deployment").key("trigger").replicas(20).cron("0 0 0 ? * *").build())
+                .namespace("namespace").name("deployment").key("trigger").replicas(20).cron("0 0 0 ? * *").timeZone("Asia/Tokyo").build())
+            .hasFieldOrPropertyWithValue("timeZone", TimeZone.getTimeZone("Asia/Tokyo"))
             .returns(new TriggerKey("trigger", "namespace/deployment"), Trigger::getKey)
             .returns(new JobKey(JOB_NAME, "namespace/deployment"), Trigger::getJobKey)
             .extracting(Trigger::getJobDataMap, InstanceOfAssertFactories.MAP)

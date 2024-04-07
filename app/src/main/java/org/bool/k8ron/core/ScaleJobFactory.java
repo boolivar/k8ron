@@ -13,6 +13,8 @@ import org.quartz.TriggerKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.TimeZone;
+
 @Component
 @RequiredArgsConstructor
 public class ScaleJobFactory {
@@ -32,12 +34,15 @@ public class ScaleJobFactory {
 
         private String cron;
 
+        private String timeZone;
+
         public Trigger build() {
             var group = groupName(namespace, name);
             return org.quartz.TriggerBuilder.newTrigger()
                     .forJob(JobKey.jobKey(jobName, group))
                     .withIdentity(TriggerKey.triggerKey(key, group))
-                    .withSchedule(CronScheduleBuilder.cronSchedule(cron))
+                    .withSchedule(CronScheduleBuilder.cronSchedule(cron)
+                            .inTimeZone(timeZone != null ? TimeZone.getTimeZone(timeZone) : null))
                     .usingJobData("replicas", replicas)
                     .build();
         }
