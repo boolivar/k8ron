@@ -28,7 +28,7 @@ public class Quartz {
     }
 
     public Mono<Long> schedule(Flux<Trigger> triggers) {
-        return triggers.collect(Collectors.groupingBy(Trigger::getKey, Collectors.toSet()))
+        return triggers.collect(Collectors.groupingBy(trigger -> trigger.getKey().getGroup(), Collectors.toSet()))
                 .flatMapIterable(Map::entrySet)
                 .doOnNext(this::schedule).count();
     }
@@ -43,7 +43,7 @@ public class Quartz {
     }
 
     @SneakyThrows
-    private void schedule(Map.Entry<TriggerKey, Set<Trigger>> triggers) {
+    private void schedule(Map.Entry<String, Set<Trigger>> triggers) {
         var jobDetail = jobFactory.createJobDetail(triggers.getKey());
         scheduler.scheduleJob(jobDetail, triggers.getValue(), false);
     }

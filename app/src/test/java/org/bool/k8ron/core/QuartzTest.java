@@ -62,7 +62,7 @@ class QuartzTest {
         var trigger = TriggerBuilder.newTrigger().build();
         var jobDetail = JobBuilder.newJob(MethodInvokingJob.class).build();
 
-        given(jobFactory.createJobDetail(trigger.getKey()))
+        given(jobFactory.createJobDetail(trigger.getKey().getGroup()))
             .willReturn(jobDetail);
 
         assertThat(quartz.schedule(Flux.just(trigger)).block())
