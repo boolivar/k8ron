@@ -42,13 +42,17 @@ checkstyle {
     toolVersion = "9.3"
 }
 
-pmd {
+tasks.withType(Pmd).configureEach {
     consoleOutput = true
+    pmdClasspath += files("$rootDir/gradle/config/pmd")
+}
+
+pmdMain {
     ruleSets = ["ruleset.xml"]
 }
 
-tasks.withType(Pmd).configureEach {
-    pmdClasspath += files("$rootDir/gradle/config/pmd")
+pmdTest {
+    ruleSets = ["test-ruleset.xml"]
 }
 
 spotbugs {
