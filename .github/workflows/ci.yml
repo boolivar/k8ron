@@ -31,10 +31,9 @@ jobs:
     - name: Release
       id: release
       if: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'release/') }}
-      uses: google-github-actions/release-please-action@v4.1.0
+      uses: google-github-actions/release-please-action@v4
       with:
-          target-branch: ${{ github.ref_name }}
-          release-type: simple
+        target-branch: ${{ github.ref_name }}
     - name: Dockerhub
       if: ${{ steps.release.outputs.release_created }}
       env:
