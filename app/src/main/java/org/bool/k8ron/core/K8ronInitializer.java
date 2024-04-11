@@ -17,6 +17,11 @@ public class K8ronInitializer implements ApplicationListener<RefreshScopeRefresh
     private final ScheduleService scheduleService;
 
     @Override
+    public boolean supportsAsyncExecution() {
+        return false;
+    }
+
+    @Override
     public void onApplicationEvent(RefreshScopeRefreshedEvent event) {
         scheduleJobs();
     }
