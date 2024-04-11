@@ -29,12 +29,14 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: boolivar/k8ron
     - name: Release
+      id: release
       if: ${{ github.ref_name == 'master' || startsWith(github.ref_name, 'release/') }}
       uses: google-github-actions/release-please-action@v4.1.0
       with:
           target-branch: ${{ github.ref_name }}
           release-type: simple
     - name: Dockerhub
+      if: ${{ steps.release.outputs.release_created }}
       env:
         DOCKERHUB_SECRET: ${{ secrets.DOCKERHUB_SECRET }}
       run: ./gradlew -PdockerhubUser=boolivar -PdockerhubPass=$DOCKERHUB_SECRET jib
