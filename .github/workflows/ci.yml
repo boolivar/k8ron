@@ -34,3 +34,7 @@ jobs:
       with:
           target-branch: ${{ github.ref_name }}
           release-type: simple
+    - name: Dockerhub
+      env:
+        DOCKERHUB_SECRET: ${{ secrets.DOCKERHUB_SECRET }}
+      run: ./gradlew -PdockerhubUser=boolivar -PdockerhubPass=$DOCKERHUB_SECRET jib
