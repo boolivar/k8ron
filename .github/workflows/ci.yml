@@ -38,4 +38,5 @@ jobs:
       if: ${{ steps.release.outputs.release_created }}
       env:
         DOCKERHUB_SECRET: ${{ secrets.DOCKERHUB_SECRET }}
-      run: ./gradlew -PdockerhubUser=boolivar -PdockerhubPass=$DOCKERHUB_SECRET jib
+        RELEASE_VERSION: ${{ steps.release.outputs.tag_name }}
+      run: ./gradlew -Prelease.forceVersion=$RELEASE_VERSION -PdockerhubUser=boolivar -PdockerhubPass=$DOCKERHUB_SECRET createRelease jib
