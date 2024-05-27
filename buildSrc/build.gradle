@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-gradle-plugin:3.2.5"
+    implementation "org.springframework.boot:spring-boot-gradle-plugin:3.3.0"
     implementation "com.google.cloud.tools:jib-gradle-plugin:3.4.1"
     implementation "com.github.spotbugs.snom:spotbugs-gradle-plugin:6.0.6"
     implementation "io.freefair.gradle:lombok-plugin:8.6"
